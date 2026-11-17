@@ -163,12 +163,20 @@
   p { margin: 0 0 12px; }
   p:last-child { margin-bottom: 0; }
 
-  /* Focus chips */
+  /* Stack: grouped chips */
+  .group + .group { margin-top: 16px; }
+  h3.group-label {
+    margin: 0 0 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #57606a;
+  }
   ul.chips {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin: 0 0 12px;
+    margin: 0;
     padding: 0;
     list-style: none;
   }
@@ -181,7 +189,28 @@
     border: 1px solid #e5e7eb;
     border-radius: 999px;
   }
-  .chips-note { color: #57606a; }
+
+  /* How I build with AI: numbered steps, mono labels */
+  ol.steps {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  ol.steps li {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    column-gap: 12px;
+    align-items: baseline;
+    padding: 10px 0;
+    border-top: 1px solid #eaeef2;
+  }
+  ol.steps li:last-child { border-bottom: 1px solid #eaeef2; }
+  ol.steps .n {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0969da;
+  }
 
   /* Now */
   ul.now {
@@ -195,20 +224,49 @@
   }
   ul.now li:last-child { border-bottom: 1px solid #eaeef2; }
 
-  /* Projects */
+  /* Projects: bento grid */
   ul.projects {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
     margin: 0 0 16px;
     padding: 0;
     list-style: none;
   }
   ul.projects li {
-    padding: 12px 0;
-    border-top: 1px solid #eaeef2;
+    display: flex;
+    flex-direction: column;
+    padding: 18px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
   }
-  ul.projects li:first-child { border-top: 0; padding-top: 0; }
+  ul.projects li.feature {
+    grid-column: 1 / -1;
+    padding: 24px 22px;
+    background: #f6f8fa;
+  }
+  ul.projects li.wide { grid-column: 1 / -1; }
+  ul.projects li.feature h3 {
+    font-size: 1.375rem;
+    line-height: 1.25;
+    margin-bottom: 6px;
+  }
   ul.projects li p { margin: 0; }
   ul.projects .desc { color: #57606a; }
-  ul.projects .link { margin-top: 2px; }
+  ul.projects .link { margin-top: auto; padding-top: 10px; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    ul.projects li {
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+  }
+  ul.projects li:hover,
+  ul.projects li:focus-within {
+    transform: translateY(-2px);
+    border-color: #0969da;
+    box-shadow: 0 6px 16px rgba(17, 17, 17, 0.08);
+  }
 
   a {
     color: #0969da;
@@ -228,6 +286,10 @@
     color: #57606a;
   }
 
+  @media (max-width: 560px) {
+    ul.projects { grid-template-columns: minmax(0, 1fr); }
+  }
+
   @media (max-width: 400px) {
     body { font-size: 16px; }
     .wrap { padding: 16px 16px 48px; }
@@ -237,6 +299,7 @@
     nav a { padding: 9px 8px; font-size: 0.875rem; }
     nav ul { margin-left: -8px; gap: 0; }
     footer { margin-top: 32px; }
+    ul.projects li.feature { padding: 20px 16px; }
   }
 </style>
 <script>
@@ -305,7 +368,8 @@
       <nav id="site-nav" aria-label="Sections">
         <ul>
           <li><a href="#about"><span lang="en">About</span><span lang="zh-CN">关于</span></a></li>
-          <li><a href="#focus"><span lang="en">Focus</span><span lang="zh-CN">方向</span></a></li>
+          <li><a href="#stack"><span lang="en">Stack</span><span lang="zh-CN">技术栈</span></a></li>
+          <li><a href="#workflow"><span lang="en">How I build with AI</span><span lang="zh-CN">AI 工作流</span></a></li>
           <li><a href="#now"><span lang="en">Now</span><span lang="zh-CN">现在</span></a></li>
           <li><a href="#projects"><span lang="en">Projects</span><span lang="zh-CN">项目</span></a></li>
           <li><a href="#contact"><span lang="en">Contact</span><span lang="zh-CN">联系</span></a></li>
@@ -321,18 +385,70 @@
   <main>
     <section id="about" aria-labelledby="about-h">
       <h2 id="about-h"><span lang="en">About</span><span lang="zh-CN">关于</span></h2>
-      <p><span lang="en">I’m a backend developer based in Bangkok. My focus areas are AI agents, software engineering and system architecture, and cryptography and cryptocurrency. I follow frontier technology and read engineering blogs daily.</span><span lang="zh-CN">我是一名常驻曼谷的后端开发者。关注方向包括 AI 智能体、软件工程与系统架构，以及密码学与加密货币。我关注前沿技术，并且每天阅读工程博客。</span></p>
+      <p><span lang="en">I’m a backend developer based in Bangkok. My focus areas are AI agents, software engineering and system architecture, and cryptography and cryptocurrency. I follow frontier technology and read engineering blogs daily. I also build with AI agents, using a workflow that splits work into small, verifiable steps.</span><span lang="zh-CN">我是一名常驻曼谷的后端开发者。关注方向包括 AI 智能体、软件工程与系统架构，以及密码学与加密货币。我关注前沿技术，并且每天阅读工程博客。我也借助 AI 智能体来构建项目，工作流是把任务拆成小步、每步都可验证。</span></p>
     </section>
 
-    <section id="focus" aria-labelledby="focus-h">
-      <h2 id="focus-h"><span lang="en">Focus</span><span lang="zh-CN">方向</span></h2>
-      <ul class="chips">
-        <li><span lang="en">Backend development</span><span lang="zh-CN">后端开发</span></li>
-        <li><span lang="en">AI agents</span><span lang="zh-CN">AI 智能体</span></li>
-        <li><span lang="en">System architecture</span><span lang="zh-CN">系统架构</span></li>
-        <li><span lang="en">Cryptography &amp; cryptocurrency</span><span lang="zh-CN">密码学与加密货币</span></li>
-      </ul>
-      <p class="chips-note"><span lang="en">What I focus on.</span><span lang="zh-CN">我的关注方向。</span></p>
+    <section id="stack" aria-labelledby="stack-h">
+      <h2 id="stack-h"><span lang="en">Stack</span><span lang="zh-CN">技术栈</span></h2>
+
+      <div class="group">
+        <h3 class="group-label"><span lang="en">AI tools</span><span lang="zh-CN">AI 工具</span></h3>
+        <ul class="chips">
+          <li><span lang="en">Muse</span><span lang="zh-CN">Muse</span></li>
+          <li><span lang="en">Claude</span><span lang="zh-CN">Claude</span></li>
+          <li><span lang="en">Codex</span><span lang="zh-CN">Codex</span></li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <h3 class="group-label"><span lang="en">Workflow</span><span lang="zh-CN">工作流</span></h3>
+        <ul class="chips">
+          <li><span lang="en">Skills</span><span lang="zh-CN">Skills</span></li>
+          <li><span lang="en">claude.md</span><span lang="zh-CN">claude.md</span></li>
+          <li><span lang="en">Multi-agent collaboration</span><span lang="zh-CN">多智能体协作</span></li>
+          <li><span lang="en">Task decomposition</span><span lang="zh-CN">任务拆解</span></li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <h3 class="group-label"><span lang="en">Languages</span><span lang="zh-CN">语言</span></h3>
+        <ul class="chips">
+          <li><span lang="en">Go</span><span lang="zh-CN">Go</span></li>
+          <li><span lang="en">Java</span><span lang="zh-CN">Java</span></li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <h3 class="group-label"><span lang="en">Focus</span><span lang="zh-CN">方向</span></h3>
+        <ul class="chips">
+          <li><span lang="en">Backend development</span><span lang="zh-CN">后端开发</span></li>
+          <li><span lang="en">System architecture</span><span lang="zh-CN">系统架构</span></li>
+          <li><span lang="en">AI agents</span><span lang="zh-CN">AI 智能体</span></li>
+          <li><span lang="en">Cryptography &amp; cryptocurrency</span><span lang="zh-CN">密码学与加密货币</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="workflow" aria-labelledby="workflow-h">
+      <h2 id="workflow-h"><span lang="en">How I build with AI</span><span lang="zh-CN">AI 工作流</span></h2>
+      <ol class="steps">
+        <li>
+          <span class="n" aria-hidden="true">01</span>
+          <span class="t"><span lang="en">Muse orchestrates: writes the requirements and checks the result.</span><span lang="zh-CN">Muse 统筹：写需求、做验收。</span></span>
+        </li>
+        <li>
+          <span class="n" aria-hidden="true">02</span>
+          <span class="t"><span lang="en">Claude builds and self-checks against acceptance criteria.</span><span lang="zh-CN">Claude 搭建，并按验收标准自查。</span></span>
+        </li>
+        <li>
+          <span class="n" aria-hidden="true">03</span>
+          <span class="t"><span lang="en">Work is split into small, verifiable steps.</span><span lang="zh-CN">工作拆成小步，每步都可验证。</span></span>
+        </li>
+        <li>
+          <span class="n" aria-hidden="true">04</span>
+          <span class="t"><span lang="en">The same flow runs work tasks and personal projects, like the Token Radar entry and this site.</span><span lang="zh-CN">同一套流程跑工作任务和个人项目，比如 Token Radar 参赛作品和这个网站。</span></span>
+        </li>
+      </ol>
     </section>
 
     <section id="now" aria-labelledby="now-h">
@@ -347,7 +463,7 @@
     <section id="projects" aria-labelledby="projects-h">
       <h2 id="projects-h"><span lang="en">Projects</span><span lang="zh-CN">项目</span></h2>
       <ul class="projects">
-        <li>
+        <li class="feature">
           <h3><span lang="en">Token Radar</span><span lang="zh-CN">Token Radar</span></h3>
           <p class="desc"><span lang="en">Building a token launch radar for the make.fun bounty.</span><span lang="zh-CN">为 make.fun 赏金任务开发代币发行雷达。</span></p>
           <p class="link"><a href="https://make.fun/" rel="noopener">make.fun</a></p>
@@ -360,7 +476,7 @@
           <h3><span lang="en">Daily English vocabulary</span><span lang="zh-CN">每日英语词汇</span></h3>
           <p class="desc"><span lang="en">Daily English words and phrases for work, meetings and engineering.</span><span lang="zh-CN">面向工作、会议和工程场景的每日英语单词与短语。</span></p>
         </li>
-        <li>
+        <li class="wide">
           <h3><span lang="en">GitHub</span><span lang="zh-CN">GitHub</span></h3>
           <p class="desc"><span lang="en">More of my work on GitHub.</span><span lang="zh-CN">我在 GitHub 上的更多作品。</span></p>
           <p class="link"><a href="https://github.com/hongspell" rel="me noopener">github.com/hongspell</a></p>
