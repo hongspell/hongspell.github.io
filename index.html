@@ -3,15 +3,227 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hong Yang — hongspell</title>
+<meta name="color-scheme" content="light">
+<meta name="description" content="Hong Yang, software engineer based in Bangkok. Backend developer, interested in AI agents and frontier technology.">
+<title>Hong Yang — Software engineer in Bangkok</title>
+<link rel="icon" href="data:,">
 <style>
-  body { font-family: system-ui, sans-serif; max-width: 640px; margin: 4rem auto; padding: 0 1.5rem; line-height: 1.6; color: #111; }
-  a { color: #0969da; }
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: #fff;
+    color: #111;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+                 "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+  }
+
+  /* Language switching: both languages live in the HTML, CSS shows one. */
+  html[lang="en"] [lang="zh-CN"] { display: none; }
+  html[lang="zh-CN"] [lang="en"] { display: none; }
+
+  .wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 20px 20px 64px;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 40px;
+  }
+
+  #lang-toggle {
+    font: inherit;
+    font-size: 0.875rem;
+    line-height: 1;
+    color: #111;
+    background: #fff;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    padding: 10px 14px;
+    min-height: 40px;
+    cursor: pointer;
+  }
+  #lang-toggle:hover { border-color: #111; }
+  #lang-toggle:focus-visible,
+  a:focus-visible {
+    outline: 2px solid #0969da;
+    outline-offset: 2px;
+  }
+
+  h1 {
+    margin: 0 0 8px;
+    font-size: clamp(2rem, 9vw, 2.75rem);
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle {
+    margin: 0 0 8px;
+    font-size: 1.2rem;
+  }
+
+  .focus {
+    margin: 0;
+    color: #57606a;
+  }
+
+  section { margin-top: 56px; }
+
+  h2 {
+    margin: 0 0 12px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #57606a;
+  }
+  html[lang="zh-CN"] h2 { letter-spacing: 0.04em; }
+
+  p { margin: 0 0 12px; }
+  p:last-child { margin-bottom: 0; }
+
+  ul.now {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  ul.now li {
+    padding: 10px 0;
+    border-top: 1px solid #eaeef2;
+  }
+  ul.now li:last-child { border-bottom: 1px solid #eaeef2; }
+
+  a {
+    color: #0969da;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    overflow-wrap: anywhere;
+  }
+  a:hover { text-decoration-thickness: 2px; }
+
+  footer {
+    margin-top: 64px;
+    padding-top: 20px;
+    border-top: 1px solid #eaeef2;
+    font-size: 0.875rem;
+    color: #57606a;
+  }
+
+  @media (max-width: 400px) {
+    body { font-size: 16px; }
+    .wrap { padding: 16px 16px 48px; }
+    .topbar { margin-bottom: 32px; }
+    section { margin-top: 44px; }
+  }
 </style>
+<script>
+(function () {
+  var root = document.documentElement;
+  var KEY = "hongspell-lang";
+  var S = {
+    en: {
+      lang: "en",
+      title: "Hong Yang \u2014 Software engineer in Bangkok",
+      desc: "Hong Yang, software engineer based in Bangkok. Backend developer, interested in AI agents and frontier technology.",
+      label: "Switch language to Chinese"
+    },
+    zh: {
+      lang: "zh-CN",
+      title: "Hong Yang \u2014 \u5e38\u9a7b\u66fc\u8c37\u7684\u8f6f\u4ef6\u5de5\u7a0b\u5e08",
+      desc: "Hong Yang\uff0c\u5e38\u9a7b\u66fc\u8c37\u7684\u8f6f\u4ef6\u5de5\u7a0b\u5e08\u3002\u540e\u7aef\u5f00\u53d1\u8005\uff0c\u5bf9 AI \u667a\u80fd\u4f53\u4e0e\u524d\u6cbf\u6280\u672f\u611f\u5174\u8da3\u3002",
+      label: "\u5207\u6362\u4e3a\u82f1\u6587"
+    }
+  };
+
+  function read() {
+    try { return localStorage.getItem(KEY) === "zh" ? "zh" : "en"; }
+    catch (e) { return "en"; }
+  }
+  function save(l) {
+    try { localStorage.setItem(KEY, l); } catch (e) {}
+  }
+
+  var cur = read();
+
+  function apply(l) {
+    cur = l;
+    var s = S[l];
+    root.setAttribute("lang", s.lang);
+    document.title = s.title;
+    var m = document.querySelector('meta[name="description"]');
+    if (m) m.setAttribute("content", s.desc);
+    var b = document.getElementById("lang-toggle");
+    if (b) b.setAttribute("aria-label", s.label);
+  }
+
+  apply(cur); // set language before first paint of the body
+
+  document.addEventListener("DOMContentLoaded", function () {
+    apply(cur);
+    var b = document.getElementById("lang-toggle");
+    if (b) b.addEventListener("click", function () {
+      var next = cur === "en" ? "zh" : "en";
+      save(next);
+      apply(next);
+    });
+  });
+})();
+</script>
 </head>
 <body>
-<h1>Hong Yang</h1>
-<p>Software engineer based in Bangkok.</p>
-<p><a href="https://github.com/hongspell">github.com/hongspell</a></p>
+<div class="wrap">
+
+  <header>
+    <div class="topbar">
+      <button type="button" id="lang-toggle" aria-label="Switch language to Chinese"><span lang="en">中文 / EN</span><span lang="zh-CN">EN / 中文</span></button>
+    </div>
+    <h1>Hong Yang</h1>
+    <p class="subtitle"><span lang="en">Software engineer based in Bangkok.</span><span lang="zh-CN">常驻曼谷的软件工程师。</span></p>
+    <p class="focus"><span lang="en">Backend developer, interested in AI agents and frontier technology.</span><span lang="zh-CN">后端开发者，对 AI 智能体与前沿技术感兴趣。</span></p>
+  </header>
+
+  <main>
+    <section id="about" aria-labelledby="about-h">
+      <h2 id="about-h"><span lang="en">About</span><span lang="zh-CN">关于</span></h2>
+      <p><span lang="en">I’m a backend developer based in Bangkok. My focus areas are AI agents, software engineering and system architecture, and cryptography and cryptocurrency.</span><span lang="zh-CN">我是一名常驻曼谷的后端开发者。关注方向包括 AI 智能体、软件工程与系统架构，以及密码学与加密货币。</span></p>
+    </section>
+
+    <section id="now" aria-labelledby="now-h">
+      <h2 id="now-h"><span lang="en">Now</span><span lang="zh-CN">现在</span></h2>
+      <ul class="now">
+        <li><span lang="en">Building a token launch radar for the make.fun Token Radar bounty.</span><span lang="zh-CN">为 make.fun Token Radar 赏金任务开发代币发行雷达。</span></li>
+        <li><span lang="en">Daily reading of engineering blogs (Uber, Anthropic, OpenAI, Google).</span><span lang="zh-CN">每天阅读工程博客（Uber、Anthropic、OpenAI、Google）。</span></li>
+        <li><span lang="en">Daily English vocabulary.</span><span lang="zh-CN">每天积累英语词汇。</span></li>
+      </ul>
+    </section>
+
+    <section id="projects" aria-labelledby="projects-h">
+      <h2 id="projects-h"><span lang="en">Projects</span><span lang="zh-CN">项目</span></h2>
+      <p><a href="https://github.com/hongspell" rel="me noopener">github.com/hongspell</a></p>
+      <p><span lang="en">More projects are on the way.</span><span lang="zh-CN">更多项目即将推出。</span></p>
+    </section>
+
+    <section id="contact" aria-labelledby="contact-h">
+      <h2 id="contact-h"><span lang="en">Contact</span><span lang="zh-CN">联系</span></h2>
+      <p><a href="https://github.com/hongspell" rel="me noopener">github.com/hongspell</a></p>
+    </section>
+  </main>
+
+  <footer>
+    <span lang="en">Hong Yang · Bangkok</span><span lang="zh-CN">Hong Yang · 曼谷</span>
+  </footer>
+
+</div>
 </body>
 </html>
